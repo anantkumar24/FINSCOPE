@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FinScope - Local development
 
 This repository contains a simple frontend single-page app and a minimal Node static server to serve the frontend.
@@ -24,3 +25,6 @@ Next steps (optional):
 - Add `package.json` and scripts to start the server (npm start).
 - Add a small API for persisting user data on the server instead of localStorage.
 - Wire up build tooling and a proper dev workflow.
+=======
+# FINSCOPE
+>>>>>>> 2474453beb8a4043238a0b6775c89cb9d64e9d29
