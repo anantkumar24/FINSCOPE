@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScopeAI - Intelligent Financial Life Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Auth Section -->
+    <div id="authSection" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <h1><i class="fas fa-chart-line"></i> FinScopeAI</h1>
+                <p>Your Intelligent Financial Life Planner</p>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="showAuthTab('register')">Sign Up</button>
+            </div>
+
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" value="demo@finscope.ai">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" value="demo123">
+                </div>
+                <button class="btn" onclick="login()" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <div class="demo-credentials">
+                    <p><strong>Demo Account:</strong> demo@finscope.ai / demo123</p>
+                </div>
+            </div>
+
+            <div id="registerForm" class="hidden">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" id="registerFirstName" class="form-control" placeholder="Enter your first name">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" id="registerLastName" class="form-control" placeholder="Enter your last name">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Create a password">
+                </div>
+                <button class="btn" onclick="register()" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </div>
+
+            <div class="auth-footer">
+                <p>By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Main Application -->
+    <div id="appSection" class="container hidden">
+        <!-- Header -->
+        <div class="app-header">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> FinScopeAI</h1>
+                <p>Welcome back, <span id="userName">User</span>! 👋</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+                <button class="nav-tab" onclick="showSection('profile')">
+                    <i class="fas fa-user-cog"></i> Profile
+                </button>
+                <button class="nav-tab" onclick="showSection('budget')">
+                    <i class="fas fa-wallet"></i> Budget
+                </button>
+                <button class="nav-tab" onclick="showSection('goals')">
+                    <i class="fas fa-bullseye"></i> Goals
+                </button>
+                <button class="nav-tab" onclick="showSection('invest')">
+                    <i class="fas fa-chart-pie"></i> Investments
+                </button>
+                <button class="nav-tab" onclick="showSection('forecast')">
+                    <i class="fas fa-magic"></i> Forecast
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <div class="connection-status status-connected">
+                <i class="fas fa-check-circle"></i> Running in Client-Only Mode (All data stored locally)
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card income">
+                    <div class="metric-label">Monthly Income</div>
+                    <div class="metric-value" id="metricIncome">₹50,000</div>
+                    <div class="metric-change">+2.5% from last month</div>
+                </div>
+                <div class="metric-card expenses">
+                    <div class="metric-label">Monthly Expenses</div>
+                    <div class="metric-value" id="metricExpenses">₹35,000</div>
+                    <div class="metric-change">-1.2% from last month</div>
+                </div>
+                <div class="metric-card savings">
+                    <div class="metric-label">Savings Rate</div>
+                    <div class="metric-value" id="metricSavingsRate">30%</div>
+                    <div class="metric-change">Excellent financial health</div>
+                </div>
+                <div class="metric-card net-worth">
+                    <div class="metric-label">Net Worth</div>
+                    <div class="metric-value" id="metricNetWorth">₹5,25,000</div>
+                    <div class="metric-change">+8.2% this year</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h4>Expense Distribution</h4>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Savings Progress</h4>
+                    <canvas id="savingsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="recent-activities">
+                <h3>Recent Transactions</h3>
+                <div id="recentTransactions">
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>Salary Credit</h4>
+                            <div class="category">Income</div>
+                        </div>
+                        <div class="activity-amount income">
+                            +₹50,000
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>Rent Payment</h4>
+                            <div class="category">Housing</div>
+                        </div>
+                        <div class="activity-amount expense">
+                            -₹15,000
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>Groceries</h4>
+                            <div class="category">Food</div>
+                        </div>
+                        <div class="activity-amount expense">
+                            -₹8,000
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="section">
+            <div class="form-section">
+                <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="profileFirstName" class="form-control" value="Demo">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="profileLastName" class="form-control" value="User">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="profileEmail" class="form-control" value="demo@finscope.ai" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="profileAge" class="form-control" value="28">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-money-bill-wave"></i> Financial Profile</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Monthly Income (₹)</label>
+                        <input type="number" id="profileIncome" class="form-control" value="50000">
+                    </div>
+                    <div class="form-group">
+                        <label>Fixed Expenses (₹)</label>
+                        <input type="number" id="profileFixedExpenses" class="form-control" value="25000">
+                    </div>
+                    <div class="form-group">
+                        <label>Variable Expenses (₹)</label>
+                        <input type="number" id="profileVariableExpenses" class="form-control" value="10000">
+                    </div>
+                    <div class="form-group">
+                        <label>Current Savings (₹)</label>
+                        <input type="number" id="profileSavings" class="form-control" value="525000">
+                    </div>
+                    <div class="form-group">
+                        <label>Family Size</label>
+                        <input type="number" id="profileFamilySize" class="form-control" value="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Risk Tolerance</label>
+                        <select id="profileRiskTolerance" class="form-control">
+                            <option value="low">Low (Conservative)</option>
+                            <option value="medium" selected>Medium (Balanced)</option>
+                            <option value="high">High (Aggressive)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="updateProfile()" id="updateProfileBtn">
+                    <i class="fas fa-save"></i> Update Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Goals Section -->
+        <div id="goals" class="section">
+            <div class="form-section">
+                <h3><i class="fas fa-bullseye"></i> Set New Goal</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Goal Title</label>
+                        <input type="text" id="goalTitle" class="form-control" placeholder="e.g., Buy a Car">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Amount (₹)</label>
+                        <input type="number" id="goalTargetAmount" class="form-control" placeholder="500000">
+                    </div>
+                    <div class="form-group">
+                        <label>Timeline (months)</label>
+                        <input type="number" id="goalTimeline" class="form-control" placeholder="24">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="goalCategory" class="form-control">
+                            <option value="house">House</option>
+                            <option value="car">Car</option>
+                            <option value="education">Education</option>
+                            <option value="retirement">Retirement</option>
+                            <option value="travel">Travel</option>
+                            <option value="emergency">Emergency Fund</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="goalPriority" class="form-control">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="addGoal()">
+                    <i class="fas fa-plus"></i> Add Goal
+                </button>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-tasks"></i> Your Goals</h3>
+                <div id="goalsList" class="goals-grid">
+                    <div class="goal-card high">
+                        <div class="goal-header">
+                            <div class="goal-title">Buy a Car</div>
+                            <div class="goal-priority priority-high">High</div>
+                        </div>
+                        <div class="goal-stats">
+                            <span>Target: ₹5,00,000</span>
+                            <span>Saved: ₹1,50,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 30%"></div>
+                        </div>
+                        <div class="goal-stats">
+                            <span>8 months left</span>
+                            <span>30% Complete</span>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-card medium">
+                        <div class="goal-header">
+                            <div class="goal-title">Emergency Fund</div>
+                            <div class="goal-priority priority-medium">Medium</div>
+                        </div>
+                        <div class="goal-stats">
+                            <span>Target: ₹2,00,000</span>
+                            <span>Saved: ₹75,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 37.5%"></div>
+                        </div>
+                        <div class="goal-stats">
+                            <span>12 months left</span>
+                            <span>38% Complete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investments Section -->
+        <div id="invest" class="section">
+            <div class="form-section">
+                <h3><i class="fas fa-chart-pie"></i> Investment Recommendations</h3>
+                <div id="recommendations">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-title">Balanced Mutual Funds</div>
+                            <div class="goal-priority priority-medium">10-12% Return</div>
+                        </div>
+                        <p>Mix of equity and debt instruments for balanced growth</p>
+                        <div class="goal-stats">
+                            <span>Risk: Medium</span>
+                            <span>Min: ₹1,000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-title">Index Funds</div>
+                            <div class="goal-priority priority-medium">12-15% Return</div>
+                        </div>
+                        <p>Track market indices with low expense ratio</p>
+                        <div class="goal-stats">
+                            <span>Risk: Medium</span>
+                            <span>Min: ₹500</span>
+                        </div>
+                    </div>
+                    
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <div class="goal-title">Fixed Deposits</div>
+                            <div class="goal-priority priority-low">6-7% Return</div>
+                        </div>
+                        <p>Safe investment with guaranteed returns</p>
+                        <div class="goal-stats">
+                            <span>Risk: Low</span>
+                            <span>Min: ₹5,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Section -->
+        <div id="forecast" class="section">
+            <div class="form-section">
+                <h3><i class="fas fa-magic"></i> Financial Forecast</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Monthly Investment Increase (%)</label>
+                        <input type="range" id="investmentSlider" min="0" max="100" value="10" class="form-control">
+                        <span id="sliderValue">10%</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Extra Monthly Savings (₹)</label>
+                        <input type="number" id="extraSavings" class="form-control" value="5000">
+                    </div>
+                </div>
+                <button class="btn" onclick="runForecast()">
+                    <i class="fas fa-chart-line"></i> Run Forecast
+                </button>
+            </div>
+
+            <div class="chart-container">
+                <h4>10-Year Net Worth Projection</h4>
+                <canvas id="forecastChart"></canvas>
+            </div>
+
+            <div class="form-section">
+                <h4>Forecast Results</h4>
+                <div id="forecastResults">
+                    <p>With current savings rate, your net worth in 10 years will be approximately <strong>₹18,72,450</strong></p>
+                    <p>That's <strong>₹13,47,450</strong> growth from your current net worth!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Section -->
+        <div id="budget" class="section">
+            <div class="form-section">
+                <h3><i class="fas fa-wallet"></i> Budget Analysis</h3>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h4>Monthly Budget</h4>
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h4>Spending by Category</h4>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="recent-activities">
+                    <h4>Budget Recommendations</h4>
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>✅ Excellent Savings Rate</h4>
+                            <div class="category">Your savings rate of 30% is above the recommended 20%</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>💡 Reduce Food Spending</h4>
+                            <div class="category">Consider meal planning to reduce food expenses by 10-15%</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-info">
+                            <h4>📈 Increase Investments</h4>
+                            <div class="category">You can increase monthly investments by ₹5,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

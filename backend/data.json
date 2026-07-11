@@ -1,0 +1,14 @@
+{
+  "profile": null,
+  "goals": [
+    {
+      "priority": "low",
+      "title": "Test Goal",
+      "category": "other",
+      "timeline": 6,
+      "targetAmount": 1000,
+      "id": "1762757445794"
+    }
+  ],
+  "transactions": []
+}
